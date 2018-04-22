@@ -200,7 +200,7 @@ apt install -y docker.io \
 	apt-transport-https \
 	lsb-release \
 	unattended-upgrades \
-	wget curl htop \
+	wget curl htop jq \
 	libzmq3-dev > /dev/null 2>&1
 # ---------------------------------------------------------------------------------------
 
@@ -247,7 +247,9 @@ TimeoutStartSec=10m
 Restart=always
 ExecStartPre=-/usr/bin/docker stop bhash
 ExecStartPre=-/usr/bin/docker rm  bhash
-ExecStartPre=/usr/bin/docker pull greerso/bhashd:latest
+# ExecStartPre=/usr/bin/docker pull greerso/bhashd:latest
+# ExecStartPre=/usr/bin/docker build greerso/bhashd:latest
+# ExecStart=/usr/bin/docker run --rm --net=host -p 17652:17652 -v /mnt/bhash:/mnt/bhash --name bhash greerso/bhashd:latest
 ExecStart=/usr/bin/docker run --rm --net=host -p 17652:17652 -v /mnt/bhash:/mnt/bhash --name bhash greerso/bhashd:latest
 [Install]
 WantedBy=multi-user.target
@@ -269,7 +271,7 @@ do
   sleep 30
 done
 
-if [[ $(docker exec -it zen-node /usr/local/bin/gosu user zen-cli z_listaddresses | wc -l) -eq 2 ]]; then
+if [[ $(docker exec -it bhash /usr/local/bin/gosu user zen-cli z_listaddresses | wc -l) -eq 2 ]]; then
   print_status "Generating shield address for node... you will need to send 1 ZEN to this address:"
   docker exec -it zen-node /usr/local/bin/gosu user zen-cli z_getnewaddress
 

@@ -47,19 +47,34 @@ Hostname="$(cat /etc/hostname)"
 # =======================================================================================
 print_status "Name Your Server"
 # =======================================================================================
-read -p "Would you like to change your server hostname from $Hostname to something else? " -n 1 -r
-if [[ $REPLY =~ ^[Yy]$ ]]
-	echo "Please enter server name: (Default: my.bhash.node)"
+read -p "Would you like to change your server hostname from $Hostname to something else? " choice
+case "$choice" in 
+  y|Y ) echo "Please enter server name: (Default: my.bhash.node)"
 	newHostname=$(inputWithDefault my.bhash.node)
-
 	sed -i "s|$Hostname|$newHostname|1" /etc/hostname
 	if grep -q "$Hostname" /etc/hosts; then
 	    sed -i "s|$Hostname|$newHostname|1" /etc/hosts
 	else
 	    echo "127.0.1.1 $newHostname" >> /etc/hosts
 	fi
-	hostname "$newHostname"
-fi
+	hostname "$newHostname";;
+	* ) echo "skipped";;
+esac
+
+#read -p "Would you like to change your server hostname from $Hostname to something else? " -n 1 -r
+#if [[ $REPLY =~ ^[Yy]$ ]]
+# 	then
+# 	echo "Please enter server name: (Default: my.bhash.node)"
+# 	newHostname=$(inputWithDefault my.bhash.node)
+# 
+# 	sed -i "s|$Hostname|$newHostname|1" /etc/hostname
+# 	if grep -q "$Hostname" /etc/hosts; then
+# 	    sed -i "s|$Hostname|$newHostname|1" /etc/hosts
+# 	else
+# 	    echo "127.0.1.1 $newHostname" >> /etc/hosts
+# 	fi
+# 	hostname "$newHostname"
+# fi
 clear
 # ---------------------------------------------------------------------------------------
 

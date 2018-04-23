@@ -276,4 +276,3 @@ bash -c "$(curl -sSL https://raw.githubusercontent.com/greerso/docker-bhash-mast
 print_status "Install Finished"
 # =======================================================================================
 # ---------------------------------------------------------------------------------------
-## TODO: Post the shield address back to our API

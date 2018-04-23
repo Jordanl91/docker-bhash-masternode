@@ -223,7 +223,7 @@ mkdir -p /mnt/bhash/{config,data}
 # =======================================================================================
 print_status "Creating the BHash Masternode configuration."
 cat <<EOF > /mnt/bhash/config/bhash.conf
-rpcuser=long bhashuser
+rpcuser=bhashuser
 rpcpassword=$rpcpassword
 rpcallowip=127.0.0.1
 listen=1

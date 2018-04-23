@@ -174,7 +174,7 @@ esac
 print_status "Enabling fail2ban services..."
 # =======================================================================================
 read -p "Would you like to install a basic firewall? " choice
-case"$choice" in
+case "$choice" in
 	y|Y ) apt install -y fail2ban
 	systemctl enable fail2ban
 	systemctl start fail2ban;;

@@ -42,11 +42,9 @@ fi
 # Fix ownership of the created files/folders
 chown -R bhash:bhash /home/bhash /mnt/bhash
 
-# /usr/local/bin/gosu bhash bhash-fetch-params
+echo "Starting $@ .."
+ if [[ "$1" == bhashd ]]; then
+     exec /usr/local/bin/gosu bhash /bin/bash -c "$@ $OPTS"
+ fi
 
-# echo "Starting $@ .."
-# if [[ "$1" == bhash ]]; then
-#     exec /usr/local/bin/gosu bhash /bin/bash -c "$@ $OPTS"
-# fi
-
-exec /usr/local/bin/gosu bhashd "$@"
+exec /usr/local/bin/gosu bhash "$@"

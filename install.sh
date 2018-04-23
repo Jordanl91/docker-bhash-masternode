@@ -263,24 +263,24 @@ clear
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
-print_status "Waiting for node to fetch params ..."
+#print_status "Waiting for node to fetch params ..."
 # =======================================================================================
-until docker exec -it bhash /usr/local/bin/gosu user bhash-cli masternode status
-do
-  echo ".."
-  sleep 30
-done
+#until docker exec -it bhash /usr/local/bin/gosu user bhash-cli masternode status
+#do
+#  echo ".."
+#  sleep 30
+#done
 
-if [[ $(docker exec -it bhash /usr/local/bin/gosu user zen-cli z_listaddresses | wc -l) -eq 2 ]]; then
-  print_status "Generating shield address for node... you will need to send 1 ZEN to this address:"
-  docker exec -it zen-node /usr/local/bin/gosu user zen-cli z_getnewaddress
+#if [[ $(docker exec -it bhash /usr/local/bin/gosu user zen-cli z_listaddresses | wc -l) -eq 2 ]]; #then
+#  print_status "Generating shield address for node... you will need to send .25 ZEN in 5 payments  #to this address:"
+#  docker exec -it zen-node /usr/local/bin/gosu user zen-cli z_getnewaddress
 
-  print_status "Restarting secnodetracker"
-  systemctl restart zen-secnodetracker
-else
-  print_status "Node already has shield address... you will need to send 1 ZEN to this address:"
-  docker exec -it zen-node /usr/local/bin/gosu user zen-cli z_listaddresses
-fi
+#  print_status "Restarting secnodetracker"
+#  systemctl restart zen-secnodetracker
+#else
+#  print_status "Node already has shield address... you will need to send .25 ZEN in 5 payments to #this address:"
+#  docker exec -it zen-node /usr/local/bin/gosu user zen-cli z_listaddresses
+#fi
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================

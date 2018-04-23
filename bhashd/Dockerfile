@@ -19,9 +19,8 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 # =======================================================================================
 && apt-get update \
 && apt-get -y upgrade \
-apt-get -y --no-install-recommends install ca-certificates curl wget apt-transport-https lsb-release libgomp1 apt-utils build-essential software-properties-common python-software-properties libtool git jq nano autoconf pkg-config \
-&& apt-get -y dist-upgrade \
-&& apt-get install -y  \
+&& apt-get -y --no-install-recommends install ca-certificates curl wget apt-transport-https lsb-release libgomp1 apt-utils build-essential software-properties-common python-software-properties libtool git jq nano autoconf pkg-config \
+# && apt-get -y dist-upgrade \
 && add-apt-repository -y ppa:bitcoin/bitcoin \
 && apt-get update \
 && apt-get -y upgrade \

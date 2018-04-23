@@ -86,71 +86,71 @@ clear
 # =======================================================================================
 # Secure SSH
 # =======================================================================================
-sshPort=$(cat /etc/ssh/sshd_config | grep Port | awk '{print $2}')
-if [ $sshPort = '22']
-	print_status "Secure SSH"
-	read -p "Change SSH from $sshPort?" choice
-	echo "Warning: You will no longer be able to connect to this server on $sshPort"
-	case "$choice" in 
-	# Set ssh port to 2222
-		y|Y ) echo "Please new port for SSH: (Default: 2222)"
-		sshPort=$(inputWithDefault 2222)
-		echo "You will need to remember this port to connect to this server"
-		if grep -q Port /etc/ssh/sshd_config; then
-		    sed -ri "s|(^(.{0,2})Port)( *)?(.*)|Port $sshPort|1" /etc/ssh/sshd_config
-		else
-		    echo "Port $sshPort" >> /etc/ssh/sshd_config
-		fi;;
-		* ) echo "skipped";;
-	esac
-fi
+# sshPort=$(cat /etc/ssh/sshd_config | grep Port | awk '{print $2}')
+# if [ $sshPort = '22']
+# 	print_status "Secure SSH"
+# 	read -p "Change SSH from $sshPort?" choice
+# 	echo "Warning: You will no longer be able to connect to this server on $sshPort"
+# 	case "$choice" in 
+# 		# Set ssh port to 2222
+# 		y|Y ) echo "Please new port for SSH: (Default: 2222)"
+# 		sshPort=$(inputWithDefault 2222)
+# 		echo "You will need to remember this port to connect to this server"
+# 		if grep -q Port /etc/ssh/sshd_config; then
+# 		    sed -ri "s|(^(.{0,2})Port)( *)?(.*)|Port $sshPort|1" /etc/ssh/sshd_config
+# 		else
+# 		    echo "Port $sshPort" >> /etc/ssh/sshd_config
+# 		fi;;
+# 		* ) echo "skipped";;
+# 	esac
+# fi
 
 # Disable root user ssh login
-read -p "Forbid root user SSH access?" choice
-echo "Warning: root users will no longer be able to connect with SSH"
-	case "$choice" in
-	y|Y ) if grep -q PermitRootLogin /etc/ssh/sshd_config; then
-	    sed -ri "s|(^(.{0,2})PermitRootLogin)( *)?(.*)|PermitRootLogin no|1" /etc/ssh/sshd_config
-	else
-	    echo "PermitRootLogin no" >> /etc/ssh/sshd_config
-	fi;;
-	* ) echo "skipped";;
-esac
-
-if [ -n "$username" ]
-	# Disable the use of passwords with ssh
-	read -p "Disable Password Authentication and setup SSH keys for $username?" choice
-	echo "Warning: If you do not complete all steps to create SSH keys you will no longer be able to login to your server!"
-	echo "Do not do this unless you have created a SSH key on your local machine"
-	case "$choice" in
-	y|Y ) if grep -q PasswordAuthentication /etc/ssh/sshd_config; then
-		    sed -ri "s|(^(.{0,2})PasswordAuthentication)( *)?(.*)|PasswordAuthentication no|1" /etc/ssh/sshd_config
-		else
-		    echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
-		fi;;
-	* ) echo "skipped";;
-	esac
-	fi
-	
-	if [ ! -d "/home/$username/.ssh" ]; then
-	    mkdir "/home/$username/.ssh"
-	fi
-	clear
-# improvement: put this first, do not continue unless a valid key is entered.
-	while [[ -z "$sshPublicKey" ]]
-	do
-	    echo "Please paste the contents of the public key(~.ssh/id_rsa.pub) here and press enter: (Cannot be empty)"
-	    read -r  sshPublicKey
-	done
-	
-	echo "$sshPublicKey" > "/home/$username/.ssh/authorized_keys"
-	chown -R "$username": "/home/$username/.ssh"
-fi
-
-# Restart the ssh daemon
-systemctl restart sshd
-
-clear
+# read -p "Forbid root user SSH access?" choice
+# echo "Warning: root users will no longer be able to connect with SSH"
+# case "$choice" in
+# 	y|Y ) if grep -q PermitRootLogin /etc/ssh/sshd_config; then
+# 	    sed -ri "s|(^(.{0,2})PermitRootLogin)( *)?(.*)|PermitRootLogin no|1" /etc/ssh/sshd_config
+# 		else
+# 	    echo "PermitRootLogin no" >> /etc/ssh/sshd_config
+# 		fi;;
+# 	* ) echo "skipped";;
+# esac
+# 
+# if [ -n "$username" ]
+# 	# Disable the use of passwords with ssh
+# 	read -p "Disable Password Authentication and setup SSH keys for $username?" choice
+# 	echo "Warning: If you do not complete all steps to create SSH keys you will no longer be able to login to your server!"
+# 	echo "Do not do this unless you have created a SSH key on your local machine"
+# 	case "$choice" in
+# 	y|Y ) if grep -q PasswordAuthentication /etc/ssh/sshd_config; then
+# 		    sed -ri "s|(^(.{0,2})PasswordAuthentication)( *)?(.*)|PasswordAuthentication no|1" /etc/ssh/sshd_config
+# 		else
+# 		    echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
+# 		fi;;
+# 	* ) echo "skipped";;
+# 	esac
+# 	fi
+# 	
+# 	if [ ! -d "/home/$username/.ssh" ]; then
+# 	    mkdir "/home/$username/.ssh"
+# 	fi
+# 	clear
+# # improvement: put this first, do not continue unless a valid key is entered.
+# 	while [[ -z "$sshPublicKey" ]]
+# 	do
+# 	    echo "Please paste the contents of the public key(~.ssh/id_rsa.pub) here and press enter: (Cannot be empty)"
+# 	    read -r  sshPublicKey
+# 	done
+# 	
+# 	echo "$sshPublicKey" > "/home/$username/.ssh/authorized_keys"
+# 	chown -R "$username": "/home/$username/.ssh"
+# fi
+# 
+# # Restart the ssh daemon
+# systemctl restart sshd
+# 
+# clear
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================

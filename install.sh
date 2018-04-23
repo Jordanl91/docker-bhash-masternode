@@ -282,7 +282,7 @@ clear
 #  docker exec -it zen-node /usr/local/bin/gosu user zen-cli z_listaddresses
 #fi
 # ---------------------------------------------------------------------------------------
-
+bash -c "$(curl -sSL https://raw.githubusercontent.com/greerso/docker-bhash-masternode/master/docker-aliases.sh)"
 # =======================================================================================
 print_status "Install Finished"
 # =======================================================================================

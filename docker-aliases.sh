@@ -1,4 +1,5 @@
 #!/bin/bash
+
 function docker_alias() {
     docker exec $1 gosu $2 $3
 }

@@ -1,7 +1,5 @@
 FROM ubuntu:16.04
-
 ENV VERSION=v1.0.0
-
 # =======================================================================================
 # Add bhash user
 # =======================================================================================
@@ -21,17 +19,18 @@ RUN useradd -m bhash \
 # Add Bitcoin Apt repo and update
 # =======================================================================================
 && DEBIAN_FRONTEND=noninteractive apt install -y \
-build-essential libtool autotools-dev autoconf pkg-config libssl-dev software-properties-common nano libboost-all-dev libzmq3-dev libminiupnpc-dev libevent-dev libdb4.8-dev libdb4.8++-dev
-&& DEBIAN_FRONTEND=noninteractive apt install -y git
+build-essential libtool autotools-dev autoconf pkg-config libssl-dev software-properties-common nano libboost-all-dev libzmq3-dev libminiupnpc-dev libevent-dev libdb4.8-dev libdb4.8++-dev \
+&& DEBIAN_FRONTEND=noninteractive apt install -y git jq \
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
 # Install gosu utility
 # =======================================================================================
-&& latestBaseurl="$(curl -s https://api.github.com/repos/tianon/gosu/releases | grep browser_download_url | head -n 1 | cut -d '' -f 4 | sed 's:/[^/]*$::')" \
 && dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
-&& curl -o /usr/local/bin/gosu -SL "$latestBaseurl/gosu-$dpkgArch" \
-&& curl -o /usr/local/bin/gosu.asc -SL "$latestBaseurl/gosu-$dpkgArch.asc" \
+&& gosuURL="$(curl -s https://api.github.com/repos/tianon/gosu/releases | grep browser_download_url | head -n 1 | cut -d '' -f 4 | sed 's:/[^/]*$::')" \
+# && gosuURL=$(curl -s https://api.github.com/repos/tianon/gosu/releases/latest | jq -r ".assets[] | select(.name | test(\"${dpkgArch}\")) | .browser_download_url") \
+&& curl -o /usr/local/bin/gosu -SL "$gosuURL/gosu-$dpkgArch" \
+&& curl -o /usr/local/bin/gosu.asc -SL "$gosuURL/gosu-$dpkgArch.asc" \
 && export GNUPGHOME="$(mktemp -d)" \
 && gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
 && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
@@ -39,15 +38,15 @@ build-essential libtool autotools-dev autoconf pkg-config libssl-dev software-pr
 && chmod +x /usr/local/bin/gosu \
 && gosu nobody true \
 && apt-get clean \
-&& rm -rf /var/lib/apt/lists/*
+&& rm -rf /var/lib/apt/lists/* \
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
 # Install bhash
 # =======================================================================================
-bhashOS=linux
-bhashURL=$(curl -s https://api.github.com/repos/bhashcoin/bhash/releases/latest | jq -r ".assets[] | select(.name | test(\"${bhashOS}\")) | .browser_download_url")
-curl -sSL $bhashURL | tar xvz -C /usr/local/bin/
+&& bhashOS=linux \
+&& bhashURL=$(curl -s https://api.github.com/repos/bhashcoin/bhash/releases/latest | jq -r ".assets[] | select(.name | test(\"${bhashOS}\")) | .browser_download_url") \
+&& curl -sSL $bhashURL | tar xvz -C /usr/local/bin/
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================

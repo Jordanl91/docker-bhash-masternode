@@ -25,7 +25,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 && apt-get update \
 && apt-get -y upgrade \
 && apt-get install -y autotools-dev libssl-dev software-properties-common libboost-all-dev libzmq3-dev libminiupnpc-dev libevent-dev libdb4.8-dev libdb4.8++-dev \
-&& apt-get autoremove
+&& apt-get autoremove \
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================

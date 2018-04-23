@@ -19,12 +19,13 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 # =======================================================================================
 && apt-get update \
 && apt-get -y upgrade \
+apt-get -y --no-install-recommends install ca-certificates curl wget apt-transport-https lsb-release libgomp1 apt-utils build-essential software-properties-common python-software-properties libtool git jq nano autoconf pkg-config \
 && apt-get -y dist-upgrade \
-&& apt-get install -y apt-utils build-essential software-properties-common python-software-properties libtool git jq nano wget curl autoconf pkg-config \
+&& apt-get install -y  \
 && add-apt-repository -y ppa:bitcoin/bitcoin \
 && apt-get update \
 && apt-get -y upgrade \
-&& apt-get install -y autotools-dev libssl-dev software-properties-common libboost-all-dev libzmq3-dev libminiupnpc-dev libevent-dev libdb4.8-dev libdb4.8++-dev \
+&& apt-get -y --no-install-recommends install autotools-dev libssl-dev software-properties-common libboost-all-dev libzmq3-dev libminiupnpc-dev libevent-dev libdb4.8-dev libdb4.8++-dev \
 && apt-get autoremove \
 # ---------------------------------------------------------------------------------------
 
@@ -51,7 +52,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 # =======================================================================================
 && bhashOS=linux \
 && bhashURL=$(curl -s https://api.github.com/repos/bhashcoin/bhash/releases/latest | jq -r ".assets[] | select(.name | test(\"${bhashOS}\")) | .browser_download_url") \
-&& curl -sSL "$bhashURL" | tar xvz -C /usr/local/bin/
+# && curl -sSL "$bhashURL" | tar xvz -C /usr/local/bin/
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================

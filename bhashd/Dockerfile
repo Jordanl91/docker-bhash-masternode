@@ -1,11 +1,5 @@
 FROM ubuntu:17.10
 ENV VERSION=v1.0.0
-# =======================================================================================
-# Silence apt
-# =======================================================================================
-ENV DEBIAN_FRONTEND=noninteractive
-# ---------------------------------------------------------------------------------------
-
 
 # =======================================================================================
 # Add bhash user
@@ -18,30 +12,37 @@ RUN useradd -m bhash \
 # =======================================================================================
 	&& apt-get update \
 	&& apt-get -y upgrade \
-	&& apt-get -y --no-install-recommends install ca-certificates curl wget apt-transport-https lsb-release libgomp1 apt-utils build-essential software-properties-common python-software-properties libtool git jq nano autoconf pkg-config \
-	# && apt-get -y dist-upgrade \
+	&& apt-get -y --no-install-recommends install apt-utils \
+	&& DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install ca-certificates curl wget apt-transport-https lsb-release libgomp1 build-essential software-properties-common python-software-properties libtool git jq nano autoconf pkg-config \
+	&& apt-get -y dist-upgrade \
 	&& add-apt-repository -y ppa:bitcoin/bitcoin \
 	&& apt-get update \
 	&& apt-get -y upgrade \
-	&& apt-get -y --no-install-recommends install autotools-dev libssl-dev software-properties-common libboost-all-dev libzmq3-dev libminiupnpc-dev libevent-dev libdb4.8-dev libdb4.8++-dev \
+	&& DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install autotools-dev libssl-dev software-properties-common libboost-all-dev libzmq3-dev libminiupnpc-dev libevent-dev libdb4.8-dev libdb4.8++-dev \
 	&& apt-get autoremove \
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
 # Install gosu utility
 # =======================================================================================
-	&& gosuURL=$(curl -s https://api.github.com/repos/tianon/gosu/releases | grep browser_download_url | head -n 1 | cut -d '"' -f 4 | sed 's:/[^/]*$::') \
-	&& dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
-	&& curl -o /usr/local/bin/gosu -SL "$gosuURL/gosu-$dpkgArch" \
-	&& curl -o /usr/local/bin/gosu.asc -SL "$gosuURL/gosu-$dpkgArch.asc" \
-	&& export GNUPGHOME="$(mktemp -d)" \
-	&& gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
-	&& gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
-	&& rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc \
-	&& chmod +x /usr/local/bin/gosu \
-	&& gosu nobody true \
-	&& apt-get clean \
-	&& rm -rf /var/lib/apt/lists/* \
+#	&& gosuURL=$(curl -s https://api.github.com/repos/tianon/gosu/releases | grep browser_download_url | head -n 1 | cut -d '"' -f 4 | sed 's:/[^/]*$::') \
+#	&& dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
+#	&& curl -o /usr/local/bin/gosu -SL "$gosuURL/gosu-$dpkgArch" \
+#	&& curl -o /usr/local/bin/gosu.asc -SL "$gosuURL/gosu-$dpkgArch.asc" \
+#	&& export GNUPGHOME="$(mktemp -d)" \
+#	&& gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
+#	&& gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
+#	&& rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc \
+#	&& chmod +x /usr/local/bin/gosu \
+#	&& gosu nobody true \
+#	&& apt-get clean \
+#	&& rm -rf /var/lib/apt/lists/* \
+	# Dependencies for both C++ and Ruby
+	&& DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends libsdl2-dev libsdl2-ttf-dev libpango1.0-dev libgl1-mesa-dev libopenal-dev libsndfile-dev libmpg123-dev libgmp-dev \
+	&& DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends ruby-dev \
+	&& gem install gosu \
+
+
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================

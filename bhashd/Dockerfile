@@ -17,17 +17,12 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 # =======================================================================================
 # Add Bitcoin Apt repo and update
 # =======================================================================================
+&& apt install -y build-essential software-properties-common python-software-properties libtool git jq nano wget curl autoconf pkg-config \
 && add-apt-repository -y ppa:bitcoin/bitcoin \
 && apt update \
 && apt -y upgrade \
 && apt -y dist-upgrade \
-# ---------------------------------------------------------------------------------------
-
-# =======================================================================================
-# Add Bitcoin Apt repo and update
-# =======================================================================================
-&& apt install -y build-essential libtool autotools-dev autoconf pkg-config libssl-dev software-properties-common nano libboost-all-dev libzmq3-dev libminiupnpc-dev libevent-dev libdb4.8-dev libdb4.8++-dev \
-&& apt install -y git jq \
+&& apt install -y autotools-dev libssl-dev software-properties-common libboost-all-dev libzmq3-dev libminiupnpc-dev libevent-dev libdb4.8-dev libdb4.8++-dev \
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================

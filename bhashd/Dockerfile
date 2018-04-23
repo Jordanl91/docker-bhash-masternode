@@ -20,7 +20,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 && apt-get update \
 && apt-get -y upgrade \
 && apt-get -y dist-upgrade \
-&& apt-get install -y build-essential software-properties-common python-software-properties libtool git jq nano wget curl autoconf pkg-config \
+&& apt-get install -y apt-utils build-essential software-properties-common python-software-properties libtool git jq nano wget curl autoconf pkg-config \
 && add-apt-repository -y ppa:bitcoin/bitcoin \
 && apt-get update \
 && apt-get -y upgrade \

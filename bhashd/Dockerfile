@@ -17,10 +17,10 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 # =======================================================================================
 # Add Bitcoin Apt repo and update
 # =======================================================================================
-add-apt-repository -y ppa:bitcoin/bitcoin \
-apt update \
-apt -y upgrade \
-apt -y dist-upgrade \
+&& add-apt-repository -y ppa:bitcoin/bitcoin \
+&& apt update \
+&& apt -y upgrade \
+&& apt -y dist-upgrade \
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================

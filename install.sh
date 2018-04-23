@@ -247,9 +247,8 @@ TimeoutStartSec=10m
 Restart=always
 ExecStartPre=-/usr/bin/docker stop bhash
 ExecStartPre=-/usr/bin/docker rm  bhash
-# ExecStartPre=/usr/bin/docker pull greerso/bhashd:latest
-# ExecStartPre=/usr/bin/docker build greerso/bhashd:latest
-# ExecStart=/usr/bin/docker run --rm --net=host -p 17652:17652 -v /mnt/bhash:/mnt/bhash --name bhash greerso/bhashd:latest
+ExecStartPre=/usr/bin/docker pull greerso/bhashd:latest
+ExecStartPre=/usr/bin/docker build greerso/bhashd:latest
 ExecStart=/usr/bin/docker run --rm --net=host -p 17652:17652 -v /mnt/bhash:/mnt/bhash --name bhash greerso/bhashd:latest
 [Install]
 WantedBy=multi-user.target
@@ -263,26 +262,11 @@ clear
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
-#print_status "Waiting for node to fetch params ..."
+# "Install bash aliases"
 # =======================================================================================
-#until docker exec -it bhash /usr/local/bin/gosu user bhash-cli masternode status
-#do
-#  echo ".."
-#  sleep 30
-#done
-
-#if [[ $(docker exec -it bhash /usr/local/bin/gosu user zen-cli z_listaddresses | wc -l) -eq 2 ]]; #then
-#  print_status "Generating shield address for node... you will need to send .25 ZEN in 5 payments  #to this address:"
-#  docker exec -it zen-node /usr/local/bin/gosu user zen-cli z_getnewaddress
-
-#  print_status "Restarting secnodetracker"
-#  systemctl restart zen-secnodetracker
-#else
-#  print_status "Node already has shield address... you will need to send .25 ZEN in 5 payments to #this address:"
-#  docker exec -it zen-node /usr/local/bin/gosu user zen-cli z_listaddresses
-#fi
-# ---------------------------------------------------------------------------------------
 bash -c "$(curl -sSL https://raw.githubusercontent.com/greerso/docker-bhash-masternode/master/docker-aliases.sh)"
+# ---------------------------------------------------------------------------------------
+
 # =======================================================================================
 print_status "Install Finished"
 # =======================================================================================

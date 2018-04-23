@@ -1,26 +1,33 @@
 FROM ubuntu:16.04
 ENV VERSION=v1.0.0
+
+# =======================================================================================
+# Silence apt
+# =======================================================================================
+RUN export DEBIAN_FRONTEND=noninteractive \
+# ---------------------------------------------------------------------------------------
+
+
 # =======================================================================================
 # Add bhash user
 # =======================================================================================
-RUN useradd -m bhash \
+&& useradd -m bhash \
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
 # Add Bitcoin Apt repo and update
 # =======================================================================================
-&& DEBIAN_FRONTEND=noninteractive add-apt-repository -y ppa:bitcoin/bitcoin \
-&& DEBIAN_FRONTEND=noninteractive apt update \
-&& DEBIAN_FRONTEND=noninteractive apt -y upgrade \
-&& DEBIAN_FRONTEND=noninteractive apt -y dist-upgrade \
+add-apt-repository -y ppa:bitcoin/bitcoin \
+apt update \
+apt -y upgrade \
+apt -y dist-upgrade \
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
 # Add Bitcoin Apt repo and update
 # =======================================================================================
-&& DEBIAN_FRONTEND=noninteractive apt install -y \
-build-essential libtool autotools-dev autoconf pkg-config libssl-dev software-properties-common nano libboost-all-dev libzmq3-dev libminiupnpc-dev libevent-dev libdb4.8-dev libdb4.8++-dev \
-&& DEBIAN_FRONTEND=noninteractive apt install -y git jq \
+&& apt install -y build-essential libtool autotools-dev autoconf pkg-config libssl-dev software-properties-common nano libboost-all-dev libzmq3-dev libminiupnpc-dev libevent-dev libdb4.8-dev libdb4.8++-dev \
+&& apt install -y git jq \
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================

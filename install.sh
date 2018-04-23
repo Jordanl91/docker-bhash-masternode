@@ -48,8 +48,7 @@ Hostname="$(cat /etc/hostname)"
 print_status "Name Your Server"
 # =======================================================================================
 read -p "Would you like to change your server hostname from $Hostname to something else? " -n 1 -r
-if [[ ! $REPLY =~ ^[Yy]$ ]]
-then
+if [[ $REPLY =~ ^[Yy]$ ]]
 	echo "Please enter server name: (Default: my.bhash.node)"
 	newHostname=$(inputWithDefault my.bhash.node)
 
@@ -68,9 +67,8 @@ clear
 # =======================================================================================
 print_status "Add a bhash user"
 # =======================================================================================
-read -p "Would you like to bhash user? " -n 1 -r
-if [[ ! $REPLY =~ ^[Yy]$ ]]
-	then
+read -p "Would you like to a bhash user? " -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]]
 	echo "Please enter the new user name: (Default bhash)"
 	username=$(inputWithDefault bhash)
 	echo "Please enter the password for '${username}': (Default $bhashuserpw)"

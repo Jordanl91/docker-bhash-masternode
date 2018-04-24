@@ -203,12 +203,21 @@ esac
 # =======================================================================================
 print_status "Installing the BHash Masternode..."
 # =======================================================================================
-echo "Please enter the Masternode Private Key that you generated earlier from your wallet console"
+echo "Please enter the Masternode Alias that you copied from your wallet earlier"
+while read masternodealias && [ -z "$masternodealias" ]; do :; done
+echo "Please enter the Masternode Private Key that you copied from your wallet earlier"
 while read masternodeprivkey && [ -z "$masternodeprivkey" ]; do :; done
+echo "Please enter the Stake Output txid that you copied from your wallet earlier"
+while read collateral_output_txid && [ -z "$collateral_output_txid" ]; do :; done
+echo "Please enter the Stake Output txid Index that you copied from your wallet earlier"
+while read collateral_output_index && [ -z "$collateral_output_index" ]; do :; done
 
 echo "#########################"
+echo "Masternode Alias: $masternodealias"
 echo "Public IP: $publicip"
 echo "Masternode Private Key: $masternodeprivkey"
+echo "Masternode Private Key: $collateral_output_txid"
+echo "Masternode Private Key: $collateral_output_index"
 echo "RPC User: $rpcuser"
 echo "RPC Password: $rpcpassword"
 echo "#########################"
@@ -241,11 +250,11 @@ mkdir -p /mnt/bhash/{config,data}
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
-# Create Masternode configuration
+# Create bhashd configuration
 # =======================================================================================
-print_status "Creating the BHash Masternode configuration."
+print_status "Creating the BHash configuration."
 cat <<EOF > /mnt/bhash/config/bhash.conf
-rpcuser=$bhashuser
+rpcuser=$rpcuser
 rpcpassword=$rpcpassword
 rpcallowip=127.0.0.1
 listen=1
@@ -259,6 +268,12 @@ bind=$publicip:17652
 masternodeaddr=$publicip
 masternodeprivkey=$masternodeprivkey
 EOF
+# ---------------------------------------------------------------------------------------
+
+# =======================================================================================
+print_status "Creating the BHash Masternode configuration."
+# =======================================================================================
+echo >> "$masternodealias $publicip:17652 $masternodeprivkey $collateral_output_txid $collateral_output_index"
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================

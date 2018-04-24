@@ -26,8 +26,18 @@ if [ ! -f "/mnt/bhash/config/bhash.conf" ]; then
   echo "No bhash.conf found in /mnt/bhash/config/. Exiting."
   exit 1
 else
-  if [ ! -L $HOME/.bhash ]; then
-    ln -s /mnt/bhash/config $HOME/.bhash.conf > /dev/null 2>&1 || true
+  if [ ! -L $HOME/.bhash/bhash.conf ]; then
+    ln -s /mnt/bhash/config/bhash.conf $HOME/.bhash/bhash.conf > /dev/null 2>&1 || true
+  fi
+fi
+
+# Must have a bhash masternode config file
+if [ ! -f "/mnt/bhash/config/masternode.conf" ]; then
+  echo "No masternode.conf found in /mnt/bhash/config/. Exiting."
+  exit 1
+else
+  if [ ! -L $HOME/.bhash/masternode.conf ]; then
+    ln -s /mnt/bhash/config/masternode.conf $HOME/.bhash/masternode.conf > /dev/null 2>&1 || true
   fi
 fi
 

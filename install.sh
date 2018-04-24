@@ -38,6 +38,7 @@ inputWithDefault() {
 # =======================================================================================
 # Installation variables
 # =======================================================================================
+rpcuser="bhashuser"
 rpcpassword="$(head -c 32 /dev/urandom | base64)"
 bhashuserpw="$(head -c 32 /dev/urandom | base64)"
 publicip="$(dig +short myip.opendns.com @resolver1.opendns.com)"
@@ -225,7 +226,7 @@ mkdir -p /mnt/bhash/{config,data}
 # =======================================================================================
 print_status "Creating the BHash Masternode configuration."
 cat <<EOF > /mnt/bhash/config/bhash.conf
-rpcuser="bhashuser"
+rpcuser=$bhashuser
 rpcpassword=$rpcpassword
 rpcallowip=127.0.0.1
 listen=1

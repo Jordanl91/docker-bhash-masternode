@@ -185,7 +185,6 @@ print_status "Installing the BHash Masternode..."
 # =======================================================================================
 echo "Please enter the Masternode Private Key that you generated earlier from your wallet console"
 while read masternodeprivkey && [ -z "$masternodeprivkey" ]; do :; done
-masternodeprivkey=$(inputWithDefault value)
 
 echo "#########################"
 echo "Public IP: $publicip"

@@ -23,7 +23,7 @@ export HOME=/home/bhash
 
 # Must have a bhash config file
 if [ ! -f "/mnt/bhash/config/bhash.conf" ]; then
-  echo "No config found. Exiting."
+  echo "No bhash.conf found in /mnt/bhash/config/. Exiting."
   exit 1
 else
   if [ ! -L $HOME/.bhash ]; then
@@ -44,7 +44,7 @@ chown -R bhash:bhash /home/bhash /mnt/bhash
 
 echo "Starting $@ .."
  if [[ "$1" == bhashd ]]; then
-     exec /usr/local/bin/gosu bhash /bin/bash -c "$@ $OPTS"
+     exec gosu bhash /bin/bash -c "$@ $OPTS"
  fi
 
-exec /usr/local/bin/gosu bhash "$@"
+exec gosu bhash "$@"

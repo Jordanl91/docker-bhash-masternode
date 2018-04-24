@@ -1,4 +1,4 @@
-FROM ubuntu:17.10
+FROM ubuntu:16.04
 ENV VERSION=v1.0.0
 
 # =======================================================================================
@@ -25,18 +25,6 @@ RUN useradd -m bhash \
 # =======================================================================================
 # Install gosu utility
 # =======================================================================================
-#	&& gosuURL=$(curl -s https://api.github.com/repos/tianon/gosu/releases | grep browser_download_url | head -n 1 | cut -d '"' -f 4 | sed 's:/[^/]*$::') \
-#	&& dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
-#	&& curl -o /usr/local/bin/gosu -SL "$gosuURL/gosu-$dpkgArch" \
-#	&& curl -o /usr/local/bin/gosu.asc -SL "$gosuURL/gosu-$dpkgArch.asc" \
-#	&& export GNUPGHOME="$(mktemp -d)" \
-#	&& gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
-#	&& gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
-#	&& rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc \
-#	&& chmod +x /usr/local/bin/gosu \
-#	&& gosu nobody true \
-#	&& apt-get clean \
-#	&& rm -rf /var/lib/apt/lists/* \
 	# Dependencies for both C++ and Ruby
 	&& DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends libsdl2-dev libsdl2-ttf-dev libpango1.0-dev libgl1-mesa-dev libopenal-dev libsndfile-dev libmpg123-dev libgmp-dev \
 	&& DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends ruby-dev \

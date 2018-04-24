@@ -60,7 +60,6 @@ case "$choice" in
 	hostname "$newHostname";;
 	* ) echo "skipped";;
 esac
-clear
 # ---------------------------------------------------------------------------------------
 
 
@@ -80,7 +79,6 @@ case "$choice" in
 	adduser $username sudo docker;;
 	* ) echo "skipped";;
 esac
-clear
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
@@ -156,7 +154,7 @@ clear
 # =======================================================================================
 print_status "Enable basic firewall services?"
 # =======================================================================================
-read -p "Would you like to install a basic firewall? " choice
+read -p "Would you like to install UFW (a basic firewall)? " choice
 case "$choice" in 
   y|Y ) apt install -y ufw
 	ufw default allow outgoing
@@ -173,7 +171,7 @@ esac
 # =======================================================================================
 print_status "Enabling fail2ban services..."
 # =======================================================================================
-read -p "Would you like to install a basic firewall? " choice
+read -p "Would you like to install fail2ban (basic intrusion detection)? " choice
 case "$choice" in
 	y|Y ) apt install -y fail2ban
 	systemctl enable fail2ban
@@ -195,7 +193,12 @@ echo "Masternode Private Key: $masternodeprivkey"
 echo "RPC User: $rpcuser"
 echo "RPC Password: $rpspassword"
 echo "#########################"
+echo ""
+read -n 1 -s -r -p "Press any key to continue..."
+
 # ---------------------------------------------------------------------------------------
+
+
 
 # =======================================================================================
 # Install required packages
@@ -223,19 +226,20 @@ mkdir -p /mnt/bhash/{config,data}
 # =======================================================================================
 print_status "Creating the BHash Masternode configuration."
 cat <<EOF > /mnt/bhash/config/bhash.conf
-rpcuser=bhashuser
-rpcpassword=$rpcpassword
-rpcallowip=127.0.0.1
-listen=1
-server=1
-daemon=0 #Docker doesnt run as daemon
-logtimestamps=1
-maxconnections=256
-masternode=1
-externalip=$publicip
-bind=$publicip:17652
-masternodeaddr=$publicip
-masternodeprivkey=$masternodeprivkey
+	rpcuser="bhashuser"
+	rpcpassword=$rpcpassword
+	rpcallowip=127.0.0.1
+	listen=1
+	server=1
+	daemon=0 #Docker doesnt run as daemon
+	logtimestamps=1
+	maxconnections=256
+	masternode=1
+	externalip=$publicip
+	bind=$publicip:17652
+	masternodeaddr=$publicip
+	masternodeprivkey=$masternodeprivkey
+EOF
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
@@ -250,20 +254,19 @@ Requires=docker.service
 [Service]
 TimeoutStartSec=10m
 Restart=always
-ExecStartPre=-/usr/bin/docker stop bhash
-ExecStartPre=-/usr/bin/docker rm  bhash
+ExecStartPre=-/usr/bin/docker stop bhashd
+ExecStartPre=-/usr/bin/docker rm  bhashd
 ExecStartPre=/usr/bin/docker pull greerso/bhashd:latest
-ExecStartPre=/usr/bin/docker build greerso/bhashd:latest
-ExecStart=/usr/bin/docker run --rm --net=host -p 17652:17652 -v /mnt/bhash:/mnt/bhash --name bhash greerso/bhashd:latest
+#ExecStartPre=/usr/bin/docker build greerso/bhashd:latest
+ExecStart=/usr/bin/docker run --rm --net=host -p 17652:17652 -v /mnt/bhash:/mnt/bhash --name bhashd greerso/bhashd:latest
 [Install]
 WantedBy=multi-user.target
 EOF
 
 print_status "Enabling and starting container service..."
 systemctl daemon-reload
-systemctl enable bhash
-systemctl restart bhash
-clear
+systemctl enable bhashd
+systemctl restart bhashd
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================

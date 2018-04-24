@@ -26,11 +26,7 @@ RUN useradd -m bhash \
 # Install gosu utility
 # =======================================================================================
 	# Dependencies for both C++ and Ruby
-	&& DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends libsdl2-dev libsdl2-ttf-dev libpango1.0-dev libgl1-mesa-dev libopenal-dev libsndfile-dev libmpg123-dev libgmp-dev \
-	&& DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends ruby-dev \
-	&& gem install gosu \
-
-
+	&& DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends gosu \
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================

@@ -46,6 +46,25 @@ Hostname="$(cat /etc/hostname)"
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
+# Create swapfile if less then 4GB memory
+# =======================================================================================
+totalmem=$(free -m | awk '/^Mem:/{print $2}')
+totalswp=$(free -m | awk '/^Swap:/{print $2}')
+totalm=$(($totalmem + $totalswp))
+if [ $totalm -lt 4000 ]; then
+  print_status "Server memory is less then 4GB..."
+  if ! grep -q '/swapfile' /etc/fstab ; then
+    print_status "Creating a 4GB swapfile..."
+    fallocate -l 4G /swapfile
+    chmod 600 /swapfile
+    mkswap /swapfile
+    swapon /swapfile
+    echo '/swapfile none swap sw 0 0' >> /etc/fstab
+  fi
+fi
+# ---------------------------------------------------------------------------------------
+
+# =======================================================================================
 print_status "Name Your Server"
 # =======================================================================================
 read -p "Would you like to change your server hostname from $Hostname to something else? " choice
@@ -257,7 +276,6 @@ Restart=always
 ExecStartPre=-/usr/bin/docker stop bhashd
 ExecStartPre=-/usr/bin/docker rm  bhashd
 ExecStartPre=/usr/bin/docker pull greerso/bhashd:latest
-ExecStartPre=/usr/bin/docker build greerso/bhashd:latest
 ExecStart=/usr/bin/docker run --rm --net=host -p 17652:17652 -v /mnt/bhash:/mnt/bhash --name bhashd greerso/bhashd:latest
 [Install]
 WantedBy=multi-user.target

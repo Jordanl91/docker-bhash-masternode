@@ -38,9 +38,9 @@ inputWithDefault() {
 # =======================================================================================
 # Installation variables
 # =======================================================================================
-rpcpassword=$(head -c 32 /dev/urandom | base64)
-bhashuserpw=$(head -c 32 /dev/urandom | base64)
-publicip=$(dig +short myip.opendns.com @resolver1.opendns.com)
+rpcpassword="$(head -c 32 /dev/urandom | base64)"
+bhashuserpw="$(head -c 32 /dev/urandom | base64)"
+publicip="$(dig +short myip.opendns.com @resolver1.opendns.com)"
 Hostname="$(cat /etc/hostname)"
 # ---------------------------------------------------------------------------------------
 
@@ -191,7 +191,7 @@ echo "#########################"
 echo "Public IP: $publicip"
 echo "Masternode Private Key: $masternodeprivkey"
 echo "RPC User: $rpcuser"
-echo "RPC Password: $rpspassword"
+echo "RPC Password: $rpcpassword"
 echo "#########################"
 echo ""
 read -n 1 -s -r -p "Press any key to continue..."
@@ -226,19 +226,19 @@ mkdir -p /mnt/bhash/{config,data}
 # =======================================================================================
 print_status "Creating the BHash Masternode configuration."
 cat <<EOF > /mnt/bhash/config/bhash.conf
-	rpcuser="bhashuser"
-	rpcpassword=$rpcpassword
-	rpcallowip=127.0.0.1
-	listen=1
-	server=1
-	daemon=0 #Docker doesnt run as daemon
-	logtimestamps=1
-	maxconnections=256
-	masternode=1
-	externalip=$publicip
-	bind=$publicip:17652
-	masternodeaddr=$publicip
-	masternodeprivkey=$masternodeprivkey
+rpcuser="bhashuser"
+rpcpassword=$rpcpassword
+rpcallowip=127.0.0.1
+listen=1
+server=1
+daemon=0 #Docker doesnt run as daemon
+logtimestamps=1
+maxconnections=256
+masternode=1
+externalip=$publicip
+bind=$publicip:17652
+masternodeaddr=$publicip
+masternodeprivkey=$masternodeprivkey
 EOF
 # ---------------------------------------------------------------------------------------
 
@@ -257,7 +257,7 @@ Restart=always
 ExecStartPre=-/usr/bin/docker stop bhashd
 ExecStartPre=-/usr/bin/docker rm  bhashd
 ExecStartPre=/usr/bin/docker pull greerso/bhashd:latest
-#ExecStartPre=/usr/bin/docker build greerso/bhashd:latest
+ExecStartPre=/usr/bin/docker build greerso/bhashd:latest
 ExecStart=/usr/bin/docker run --rm --net=host -p 17652:17652 -v /mnt/bhash:/mnt/bhash --name bhashd greerso/bhashd:latest
 [Install]
 WantedBy=multi-user.target

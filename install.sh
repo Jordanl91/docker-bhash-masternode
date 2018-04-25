@@ -245,7 +245,7 @@ echo "RPC User: $rpcuser"
 echo "RPC Password: $rpcpassword"
 echo "#########################"
 echo ""
-read -n 1 -s -r -p "Press any key to continue..."
+read -n 1 -s -r -p "You will need this RPC User and RPC Password to enter into the Wallet on your main computer per step 12 of the install instructions.  Press any key to continue once you have completed step 12..."
 
 # ---------------------------------------------------------------------------------------
 

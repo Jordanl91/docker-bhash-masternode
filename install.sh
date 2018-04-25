@@ -36,6 +36,20 @@ inputWithDefault() {
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
+# Install required packages
+# =======================================================================================
+print_status "Installing packages required for setup..."
+apt-get update
+apt-get -y upgrade
+apt-get install -y docker.io \
+	apt-transport-https \
+	lsb-release \
+	unattended-upgrades \
+	wget curl htop jq \
+	libzmq3-dev > /dev/null 2>&1
+# ---------------------------------------------------------------------------------------
+
+# =======================================================================================
 # Installation variables
 # =======================================================================================
 rpcuser="bhashuser"
@@ -182,7 +196,7 @@ case "$choice" in
 	# =======================================================================================
 	read -p "Would you like to install UFW (a basic firewall)? " choice
 	case "$choice" in 
-	  y|Y ) apt install -y ufw
+	  y|Y ) apt-get install -y ufw
 		ufw default allow outgoing
 		ufw default deny incoming
 		# Open ports for ssh and webapps
@@ -199,7 +213,7 @@ case "$choice" in
 	# =======================================================================================
 	read -p "Would you like to install fail2ban (basic intrusion detection)? " choice
 	case "$choice" in
-		y|Y ) apt install -y fail2ban
+		y|Y ) apt-get install -y fail2ban
 		systemctl enable fail2ban
 		systemctl start fail2ban;;
 		* ) echo "skipped";;
@@ -233,20 +247,6 @@ echo "#########################"
 echo ""
 read -n 1 -s -r -p "Press any key to continue..."
 
-# ---------------------------------------------------------------------------------------
-
-
-
-# =======================================================================================
-# Install required packages
-# =======================================================================================
-print_status "Installing packages required for setup..."
-apt install -y docker.io \
-	apt-transport-https \
-	lsb-release \
-	unattended-upgrades \
-	wget curl htop jq \
-	libzmq3-dev > /dev/null 2>&1
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================

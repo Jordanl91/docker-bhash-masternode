@@ -72,7 +72,8 @@ MN1 123.456.789:17652 y0uRm4st3rn0depr1vatek3y tr4ns4cti0nh4ash 0
 ```shell
 bhash-cli masternode status
 bhash-cli getinfo
-bhash-cli help```
+bhash-cli help
+```
 
 BASH: bUfQ5De52EYbi3Rn6XL9LnN466hs7nCzkJ  
 ETH: 0x0f64257fAA9E5E36428E5BbB44C9A2aE3A055577  

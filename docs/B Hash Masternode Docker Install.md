@@ -5,7 +5,7 @@
 * A computer to host your local wallet (your main computer is adequate and allows you to manage Masternodes on your local wallet while you host them securely on a VPS)
 * A server that is powered on, connected to the internet 24/7 and has a static IP address.
 
-### Section 1
+*Note:  Lines that start with a # are comments and should not be entered into the cli (Command Line Interface).  Anything typed inside [square brackets] (including the brackets) is to be replaced with the appropriate text.
 
 1. On your main computer, open the b-hash wallet and go to Tools>Debug Console, you will see a screen like the one below pop up allowing you to access the command line.
 ![](B%20Hash%20Masternode%20Docker%20Install/bhashConsole.png)

@@ -7,6 +7,7 @@
 
 *Note:  Lines that start with a # are comments and should not be entered into the cli (Command Line Interface).  Anything typed inside [square brackets] (including the brackets) is to be replaced with the appropriate text.
 
+- - -
 1. On your main computer, open the b-hash wallet and go to Tools>Debug Console, you will see a screen like the one below pop up allowing you to access the command line.
 ![](B%20Hash%20Masternode%20Docker%20Install/bhashConsole.png)
 2. Enter the following command to generate a private key for each Masternode.  Save this key somewhere secure, you will need to enter it into your vps. 

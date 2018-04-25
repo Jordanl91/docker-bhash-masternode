@@ -1,4 +1,5 @@
 #  B Hash Masternode Docker Install
+## in one line of code
 
 ### Requirements:
 * 2000 HASH + tx fee (any more or less, even by a fraction and propagation will be unsuccessful)

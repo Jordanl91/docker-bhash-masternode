@@ -17,7 +17,8 @@ createmasternodekey
 ```
 3. After you generate a private key, you will enter (without quotations):
 ```shell
-# replace MN1 with any alpha-numerical 'alias' that you would like to name your masternode.  This is for your future reference and not a public address.
+# replace MN1 with any alpha-numerical 'alias' that you would like to name your masternode.
+# This is for your future reference and not a public address.
 
 getaccountaddress MN1
 # result will look similar to this
@@ -36,17 +37,21 @@ masternode outputs
 ```
 [ALIAS] [IP:17652] [MASTERNODEPRIVKEY] [TXID] [TXIN]
 ```
-[ALIAS]: your node alias
-[IP: 17652] your server public IP address and the Masternode port.[MASTERNODEPRIVKEY] the private key that you created in step 2.[TXID] the transaction ID that you created in step 7.[TXIN] the transaction index from step 7, usually 0.For example:  `myn0de 123.456.789:17652 y0uRm4st3rn0depr1vatek3y tr4ns4cti0nh4ash 0`.  You will also need this information to enter into the Masternode VPS.
+[ALIAS]: your node alias.  
+[IP: 17652] your server public IP address and the Masternode port.  
+[MASTERNODEPRIVKEY] the private key that you created in step 2.  
+[TXID] the transaction ID that you created in step 7.  
+[TXIN] the transaction index from step 7, usually 0.  
+For example:  `myn0de 123.456.789:17652 y0uRm4st3rn0depr1vatek3y tr4ns4cti0nh4ash 0`.  You will also need this information to enter into the Masternode VPS.  
 11. Log into your VPS, enter the following command and follow the prompts:
 ```shell
 sudo bash -c "$(curl -sSL https://raw.githubusercontent.com/greerso/docker-bhash-masternode/master/install.sh)"
 ```
-12. In the wallet, go to Tools>Open Masternode Configuration File.  A text file will open in your default text editor.  Enter the text that you created in step 10, delete anything else.  You should have one line per Masternode.  Save the file and exit the text editor:
+12. Back in the wallet on your main computer, go to Tools>Open Masternode Configuration File.  A text file will open in your default text editor.  Enter the text that you created in step 10, delete anything else.  You should have one line per Masternode.  Save the file and exit the text editor:
 ```shell
 MN1 123.456.789:17652 y0uRm4st3rn0depr1vatek3y tr4ns4cti0nh4ash 0
 ```
-13. Back in the wallet, this time go to Tools>Open Wallet Configuration File.  and add the following text, replacing the information in brackets with the values from the Masternode:
+13. In the wallet, this time go to Tools>Open Wallet Configuration File.  and add the following text, replacing the information in brackets with the values from the Masternode:
 ```shell
  rpcuser=[username]
  rpcpassword=[password]
@@ -66,10 +71,9 @@ MN1 123.456.789:17652 y0uRm4st3rn0depr1vatek3y tr4ns4cti0nh4ash 0
 ```shell
 bhash-cli masternode status
 bhash-cli getinfo
-bhash-cli help
-```
+bhash-cli help```
 
-BASH: bUfQ5De52EYbi3Rn6XL9LnN466hs7nCzkJ
-ETH: 0x0f64257fAA9E5E36428E5BbB44C9A2aE3A055577
-ZEN: zndLiWRo7cYeAKuPArtpQ6HNPi6ZdaTmLFL
-BTC: 1BzrkEMSF4aXBtZ19DhVf8KMPVkXjXaAPG
+BASH: bUfQ5De52EYbi3Rn6XL9LnN466hs7nCzkJ  
+ETH: 0x0f64257fAA9E5E36428E5BbB44C9A2aE3A055577  
+ZEN: zndLiWRo7cYeAKuPArtpQ6HNPi6ZdaTmLFL  
+BTC: 1BzrkEMSF4aXBtZ19DhVf8KMPVkXjXaAPG  

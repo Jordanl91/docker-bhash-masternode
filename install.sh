@@ -57,6 +57,7 @@ rpcpassword="$(head -c 32 /dev/urandom | base64)"
 bhashuserpw="$(head -c 32 /dev/urandom | base64)"
 publicip="$(dig +short myip.opendns.com @resolver1.opendns.com)"
 Hostname="$(cat /etc/hostname)"
+sshPort=$(cat /etc/ssh/sshd_config | grep Port | awk '{print $2}')
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
@@ -124,7 +125,6 @@ case "$choice" in
 	# =======================================================================================
 	# Secure SSH
 	# =======================================================================================
-	# sshPort=$(cat /etc/ssh/sshd_config | grep Port | awk '{print $2}')
 	# if [ $sshPort = '22']
 	# 	print_status "Secure SSH"
 	# 	read -p "Change SSH from $sshPort?" choice

@@ -85,7 +85,7 @@ case "$choice" in
 	# ---------------------------------------------------------------------------------------
 	
 	# =======================================================================================
-	print_status "Name Your Server"
+	print_status "Name Your Server..."
 	# =======================================================================================
 	read -p "Would you like to change your server hostname from $Hostname to something else? " choice
 	case "$choice" in 
@@ -104,7 +104,7 @@ case "$choice" in
 	
 	
 	# =======================================================================================
-	print_status "Add a bhash user"
+	print_status "Add a bhash user..."
 	# =======================================================================================
 	read -p "Would you like to a bhash user? " choice
 	case "$choice" in 
@@ -261,7 +261,7 @@ mkdir -p /mnt/bhash/{config,data}
 # =======================================================================================
 # Create bhashd configuration
 # =======================================================================================
-print_status "Creating the BHash configuration."
+print_status "Creating the BHash configuration..."
 cat <<EOF > /mnt/bhash/config/bhash.conf
 rpcuser=$rpcuser
 rpcpassword=$rpcpassword
@@ -280,7 +280,7 @@ EOF
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
-print_status "Creating the BHash Masternode configuration."
+print_status "Creating the BHash Masternode configuration..."
 # =======================================================================================
 echo >> "$masternodealias $publicip:17652 $masternodeprivkey $collateral_output_txid $collateral_output_index"
 # ---------------------------------------------------------------------------------------
@@ -305,10 +305,15 @@ ExecStart=/usr/bin/docker run --rm --net=host -p 17652:17652 -v /mnt/bhash:/mnt/
 WantedBy=multi-user.target
 EOF
 
-print_status "Enabling and starting container service..."
+print_status "Enabling and starting container service (please be patient..."
 systemctl daemon-reload
 systemctl enable bhashd
-systemctl restart bhashd
+until systemctl restart bhashd
+do
+  echo ".."
+  sleep 30
+done
+
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================

@@ -46,156 +46,165 @@ Hostname="$(cat /etc/hostname)"
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
-# Create swapfile if less then 4GB memory
-# =======================================================================================
-totalmem=$(free -m | awk '/^Mem:/{print $2}')
-totalswp=$(free -m | awk '/^Swap:/{print $2}')
-totalm=$(($totalmem + $totalswp))
-if [ $totalm -lt 4000 ]; then
-  print_status "Server memory is less then 4GB..."
-  if ! grep -q '/swapfile' /etc/fstab ; then
-    print_status "Creating a 4GB swapfile..."
-    fallocate -l 4G /swapfile
-    chmod 600 /swapfile
-    mkswap /swapfile
-    swapon /swapfile
-    echo '/swapfile none swap sw 0 0' >> /etc/fstab
-  fi
-fi
-# ---------------------------------------------------------------------------------------
-
-# =======================================================================================
-print_status "Name Your Server"
+# Server setup
 # =======================================================================================
 read -p "Would you like to change your server hostname from $Hostname to something else? " choice
 case "$choice" in 
-  y|Y ) echo "Please enter server name: (Default: my.bhash.node)"
-	newHostname=$(inputWithDefault my.bhash.node)
-	sed -i "s|$Hostname|$newHostname|1" /etc/hostname
-	if grep -q "$Hostname" /etc/hosts; then
-	    sed -i "s|$Hostname|$newHostname|1" /etc/hosts
-	else
-	    echo "127.0.1.1 $newHostname" >> /etc/hosts
+  y|Y ) 
+  	# =======================================================================================
+	# Create swapfile if less then 4GB memory
+	# =======================================================================================
+	totalmem=$(free -m | awk '/^Mem:/{print $2}')
+	totalswp=$(free -m | awk '/^Swap:/{print $2}')
+	totalm=$(($totalmem + $totalswp))
+	if [ $totalm -lt 4000 ]; then
+	  print_status "Server memory is less then 4GB..."
+	  if ! grep -q '/swapfile' /etc/fstab ; then
+	    print_status "Creating a 4GB swapfile..."
+	    fallocate -l 4G /swapfile
+	    chmod 600 /swapfile
+	    mkswap /swapfile
+	    swapon /swapfile
+	    echo '/swapfile none swap sw 0 0' >> /etc/fstab
+	  fi
 	fi
-	hostname "$newHostname";;
-	* ) echo "skipped";;
-esac
-# ---------------------------------------------------------------------------------------
-
-
-# =======================================================================================
-print_status "Add a bhash user"
-# =======================================================================================
-read -p "Would you like to a bhash user? " choice
-case "$choice" in 
-  y|Y ) echo "Please enter the new user name: (Default bhash)"
-	username=$(inputWithDefault bhash)
-	echo "Please enter the password for '${username}': (Default $bhashuserpw)"
-	echo "You will need to remember this password"
-	userPassword=$(inputWithDefault $bhashuserpw)	
-	adduser --gecos "" --disabled-password --quiet "$username"
-	echo "$username:$userPassword" | chpasswd	
-	# Add user to sudoers and docker
-	adduser $username sudo docker;;
-	* ) echo "skipped";;
-esac
-# ---------------------------------------------------------------------------------------
-
-# =======================================================================================
-# Secure SSH
-# =======================================================================================
-# sshPort=$(cat /etc/ssh/sshd_config | grep Port | awk '{print $2}')
-# if [ $sshPort = '22']
-# 	print_status "Secure SSH"
-# 	read -p "Change SSH from $sshPort?" choice
-# 	echo "Warning: You will no longer be able to connect to this server on $sshPort"
-# 	case "$choice" in 
-# 		# Set ssh port to 2222
-# 		y|Y ) echo "Please new port for SSH: (Default: 2222)"
-# 		sshPort=$(inputWithDefault 2222)
-# 		echo "You will need to remember this port to connect to this server"
-# 		if grep -q Port /etc/ssh/sshd_config; then
-# 		    sed -ri "s|(^(.{0,2})Port)( *)?(.*)|Port $sshPort|1" /etc/ssh/sshd_config
-# 		else
-# 		    echo "Port $sshPort" >> /etc/ssh/sshd_config
-# 		fi;;
-# 		* ) echo "skipped";;
-# 	esac
-# fi
-
-# Disable root user ssh login
-# read -p "Forbid root user SSH access?" choice
-# echo "Warning: root users will no longer be able to connect with SSH"
-# case "$choice" in
-# 	y|Y ) if grep -q PermitRootLogin /etc/ssh/sshd_config; then
-# 	    sed -ri "s|(^(.{0,2})PermitRootLogin)( *)?(.*)|PermitRootLogin no|1" /etc/ssh/sshd_config
-# 		else
-# 	    echo "PermitRootLogin no" >> /etc/ssh/sshd_config
-# 		fi;;
-# 	* ) echo "skipped";;
-# esac
-# 
-# if [ -n "$username" ]
-# 	# Disable the use of passwords with ssh
-# 	read -p "Disable Password Authentication and setup SSH keys for $username?" choice
-# 	echo "Warning: If you do not complete all steps to create SSH keys you will no longer be able to login to your server!"
-# 	echo "Do not do this unless you have created a SSH key on your local machine"
-# 	case "$choice" in
-# 	y|Y ) if grep -q PasswordAuthentication /etc/ssh/sshd_config; then
-# 		    sed -ri "s|(^(.{0,2})PasswordAuthentication)( *)?(.*)|PasswordAuthentication no|1" /etc/ssh/sshd_config
-# 		else
-# 		    echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
-# 		fi;;
-# 	* ) echo "skipped";;
-# 	esac
-# 	fi
-# 	
-# 	if [ ! -d "/home/$username/.ssh" ]; then
-# 	    mkdir "/home/$username/.ssh"
-# 	fi
-# 	clear
-# # improvement: put this first, do not continue unless a valid key is entered.
-# 	while [[ -z "$sshPublicKey" ]]
-# 	do
-# 	    echo "Please paste the contents of the public key(~.ssh/id_rsa.pub) here and press enter: (Cannot be empty)"
-# 	    read -r  sshPublicKey
-# 	done
-# 	
-# 	echo "$sshPublicKey" > "/home/$username/.ssh/authorized_keys"
-# 	chown -R "$username": "/home/$username/.ssh"
-# fi
-# 
-# # Restart the ssh daemon
-# systemctl restart sshd
-# 
-# clear
-# ---------------------------------------------------------------------------------------
-
-# =======================================================================================
-print_status "Enable basic firewall services?"
-# =======================================================================================
-read -p "Would you like to install UFW (a basic firewall)? " choice
-case "$choice" in 
-  y|Y ) apt install -y ufw
-	ufw default allow outgoing
-	ufw default deny incoming
-	# Open ports for ssh and webapps
-	ufw allow $sshPort/tcp comment 'ssh port'
-	ufw allow 17652/tcp comment 'bhash daemon'	
-	# Enable the firewall
-	ufw enable;;
-	* ) echo "skipped";;
-esac
-# ---------------------------------------------------------------------------------------
-
-# =======================================================================================
-print_status "Enabling fail2ban services..."
-# =======================================================================================
-read -p "Would you like to install fail2ban (basic intrusion detection)? " choice
-case "$choice" in
-	y|Y ) apt install -y fail2ban
-	systemctl enable fail2ban
-	systemctl start fail2ban;;
+	# ---------------------------------------------------------------------------------------
+	
+	# =======================================================================================
+	print_status "Name Your Server"
+	# =======================================================================================
+	read -p "Would you like to change your server hostname from $Hostname to something else? " choice
+	case "$choice" in 
+	  y|Y ) echo "Please enter server name: (Default: my.bhash.node)"
+		newHostname=$(inputWithDefault my.bhash.node)
+		sed -i "s|$Hostname|$newHostname|1" /etc/hostname
+		if grep -q "$Hostname" /etc/hosts; then
+		    sed -i "s|$Hostname|$newHostname|1" /etc/hosts
+		else
+		    echo "127.0.1.1 $newHostname" >> /etc/hosts
+		fi
+		hostname "$newHostname";;
+		* ) echo "skipped";;
+	esac
+	# ---------------------------------------------------------------------------------------
+	
+	
+	# =======================================================================================
+	print_status "Add a bhash user"
+	# =======================================================================================
+	read -p "Would you like to a bhash user? " choice
+	case "$choice" in 
+	  y|Y ) echo "Please enter the new user name: (Default bhash)"
+		username=$(inputWithDefault bhash)
+		echo "Please enter the password for '${username}': (Default $bhashuserpw)"
+		echo "You will need to remember this password"
+		userPassword=$(inputWithDefault $bhashuserpw)	
+		adduser --gecos "" --disabled-password --quiet "$username"
+		echo "$username:$userPassword" | chpasswd	
+		# Add user to sudoers and docker
+		adduser $username sudo docker;;
+		* ) echo "skipped";;
+	esac
+	# ---------------------------------------------------------------------------------------
+	
+	# =======================================================================================
+	# Secure SSH
+	# =======================================================================================
+	# sshPort=$(cat /etc/ssh/sshd_config | grep Port | awk '{print $2}')
+	# if [ $sshPort = '22']
+	# 	print_status "Secure SSH"
+	# 	read -p "Change SSH from $sshPort?" choice
+	# 	echo "Warning: You will no longer be able to connect to this server on $sshPort"
+	# 	case "$choice" in 
+	# 		# Set ssh port to 2222
+	# 		y|Y ) echo "Please new port for SSH: (Default: 2222)"
+	# 		sshPort=$(inputWithDefault 2222)
+	# 		echo "You will need to remember this port to connect to this server"
+	# 		if grep -q Port /etc/ssh/sshd_config; then
+	# 		    sed -ri "s|(^(.{0,2})Port)( *)?(.*)|Port $sshPort|1" /etc/ssh/sshd_config
+	# 		else
+	# 		    echo "Port $sshPort" >> /etc/ssh/sshd_config
+	# 		fi;;
+	# 		* ) echo "skipped";;
+	# 	esac
+	# fi
+	
+	# Disable root user ssh login
+	# read -p "Forbid root user SSH access?" choice
+	# echo "Warning: root users will no longer be able to connect with SSH"
+	# case "$choice" in
+	# 	y|Y ) if grep -q PermitRootLogin /etc/ssh/sshd_config; then
+	# 	    sed -ri "s|(^(.{0,2})PermitRootLogin)( *)?(.*)|PermitRootLogin no|1" /etc/ssh/sshd_config
+	# 		else
+	# 	    echo "PermitRootLogin no" >> /etc/ssh/sshd_config
+	# 		fi;;
+	# 	* ) echo "skipped";;
+	# esac
+	# 
+	# if [ -n "$username" ]
+	# 	# Disable the use of passwords with ssh
+	# 	read -p "Disable Password Authentication and setup SSH keys for $username?" choice
+	# 	echo "Warning: If you do not complete all steps to create SSH keys you will no longer be able to login to your server!"
+	# 	echo "Do not do this unless you have created a SSH key on your local machine"
+	# 	case "$choice" in
+	# 	y|Y ) if grep -q PasswordAuthentication /etc/ssh/sshd_config; then
+	# 		    sed -ri "s|(^(.{0,2})PasswordAuthentication)( *)?(.*)|PasswordAuthentication no|1" /etc/ssh/sshd_config
+	# 		else
+	# 		    echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
+	# 		fi;;
+	# 	* ) echo "skipped";;
+	# 	esac
+	# 	fi
+	# 	
+	# 	if [ ! -d "/home/$username/.ssh" ]; then
+	# 	    mkdir "/home/$username/.ssh"
+	# 	fi
+	# 	clear
+	# # improvement: put this first, do not continue unless a valid key is entered.
+	# 	while [[ -z "$sshPublicKey" ]]
+	# 	do
+	# 	    echo "Please paste the contents of the public key(~.ssh/id_rsa.pub) here and press enter: (Cannot be empty)"
+	# 	    read -r  sshPublicKey
+	# 	done
+	# 	
+	# 	echo "$sshPublicKey" > "/home/$username/.ssh/authorized_keys"
+	# 	chown -R "$username": "/home/$username/.ssh"
+	# fi
+	# 
+	# # Restart the ssh daemon
+	# systemctl restart sshd
+	# 
+	# clear
+	# ---------------------------------------------------------------------------------------
+	
+	# =======================================================================================
+	print_status "Enable basic firewall services?"
+	# =======================================================================================
+	read -p "Would you like to install UFW (a basic firewall)? " choice
+	case "$choice" in 
+	  y|Y ) apt install -y ufw
+		ufw default allow outgoing
+		ufw default deny incoming
+		# Open ports for ssh and webapps
+		ufw allow $sshPort/tcp comment 'ssh port'
+		ufw allow 17652/tcp comment 'bhash daemon'	
+		# Enable the firewall
+		ufw enable;;
+		* ) echo "skipped";;
+	esac
+	# ---------------------------------------------------------------------------------------
+	
+	# =======================================================================================
+	print_status "Enabling fail2ban services..."
+	# =======================================================================================
+	read -p "Would you like to install fail2ban (basic intrusion detection)? " choice
+	case "$choice" in
+		y|Y ) apt install -y fail2ban
+		systemctl enable fail2ban
+		systemctl start fail2ban;;
+		* ) echo "skipped";;
+	esac;;
+	# ---------------------------------------------------------------------------------------
 	* ) echo "skipped";;
 esac
 # ---------------------------------------------------------------------------------------

@@ -48,7 +48,7 @@ Hostname="$(cat /etc/hostname)"
 # =======================================================================================
 # Server setup
 # =======================================================================================
-read -p "Would you like to change your server hostname from $Hostname to something else? " choice
+read -p "Would you like perform a base server setup (swap, hostname, bhash user, ufw, fail2ban)? " choice
 case "$choice" in 
   y|Y ) 
   	# =======================================================================================

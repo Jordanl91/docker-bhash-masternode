@@ -33,6 +33,11 @@ inputWithDefault() {
     userInput=${userInput:-$@}
     echo "$userInput"
 }
+
+# run commands inside docker container on host
+function docker_alias() {
+    docker exec $1 gosu $2 $3
+}
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
@@ -305,7 +310,7 @@ ExecStart=/usr/bin/docker run --rm --net=host -p 17652:17652 -v /mnt/bhash:/mnt/
 WantedBy=multi-user.target
 EOF
 
-print_status "Enabling and starting container service (please be patient..."
+print_status "Enabling and starting container service (please be patient...)"
 systemctl daemon-reload
 systemctl enable bhashd
 until systemctl restart bhashd
@@ -319,7 +324,7 @@ done
 # =======================================================================================
 # "Install bash aliases"
 # =======================================================================================
-bash -c "$(curl -sSL https://raw.githubusercontent.com/greerso/docker-bhash-masternode/master/docker-aliases.sh)"
+alias bhash-cli="docker_alias greerso/mund mun /usr/local/bin/mun-cli"
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================

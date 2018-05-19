@@ -7,7 +7,7 @@
 
 *Note:  Lines that start with a # are comments and should not be entered into the cli (Command Line Interface).  Anything typed inside [square brackets] (including the brackets) is to be replaced with the appropriate text.
 
-1. On your main computer, open the b-hash wallet and go to Tools>Debug Console, you will see a screen like the one below pop up allowing you to access the command line.
+1. On your main computer, open the nodium wallet and go to Tools>Debug Console, you will see a screen like the one below pop up allowing you to access the command line.
 ![](B%20Hash%20Masternode%20Docker%20Install/nodiumConsole.png)
 2. Enter the following command to generate a private key for each Masternode.  Save this key somewhere secure, you will need to enter it into your vps. 
 ```shell
@@ -25,7 +25,7 @@ getaccountaddress MN1
 # mA7fXSTe23RNoD83Esx6or4uYLxLqunDm5
 ```
 5. You will receive an address that you will send the 10000 hash stake to.
-6. Still in the b-hash wallet, send 10000 hash to the address that you created in the previous step with the `getaccountaddress` command, ensure it is exactly 10,000 hash after the tx fee is deducted, any variance and installation will be unsuccessful.
+6. Still in the nodium wallet, send 10000 hash to the address that you created in the previous step with the `getaccountaddress` command, ensure it is exactly 10,000 hash after the tx fee is deducted, any variance and installation will be unsuccessful.
 7. Once you see the 10000 hash show up in your transactions enter the following command into the console:
 ```shell
 masternode outputs
@@ -45,7 +45,7 @@ masternode outputs
 For example:  `myn0de 123.456.789:6250 y0uRm4st3rn0depr1vatek3y tr4ns4cti0nh4ash 0`.  You will also need this information to enter into the Masternode VPS.  
 11. Log into your VPS, enter the following command and follow the prompts:
 ```shell
-sudo bash -c "$(curl -sSL https://raw.githubusercontent.com/greerso/docker-nodium-masternode/master/install.sh)"
+sudo bash -c "$(curl -sSL https://raw.githubusercontent.com/Jordanl91/docker-nodium-masternode/master/install.sh)"
 ```
 12. Back in the wallet on your main computer, go to Tools>Open Masternode Configuration File.  A text file will open in your default text editor.  Enter the text that you created in step 10, delete anything else.  You should have one line per Masternode.  Save the file and exit the text editor:
 ```shell

@@ -47,7 +47,7 @@ masternode outputs
 For example:  `myn0de 123.456.789:6250 y0uRm4st3rn0depr1vatek3y tr4ns4cti0nh4ash 0`.  You will also need this information to enter into the Masternode VPS.  
 11. Log into your VPS, enter the following command and follow the prompts:
 ```shell
-sudo bash -c "$(curl -sSL https://raw.githubusercontent.com/greerso/docker-nodium-masternode/master/install.sh)"
+sudo bash -c "$(curl -sSL https://raw.githubusercontent.com/Jordanl91/docker-nodium-masternode/master/install.sh)"
 ```
 12. Back in the wallet on your main computer, go to Tools>Open Masternode Configuration File.  A text file will open in your default text editor.  Enter the text that you created in step 10, delete anything else.  You should have one line per Masternode.  Save the file and exit the text editor:
 ```shell

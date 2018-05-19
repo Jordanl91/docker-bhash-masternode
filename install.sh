@@ -206,7 +206,7 @@ case "$choice" in
 		ufw default deny incoming
 		# Open ports for ssh and webapps
 		ufw allow $sshPort/tcp comment 'ssh port'
-		ufw allow 17652/tcp comment 'nodium daemon'	
+		ufw allow 6250/tcp comment 'nodium daemon'	
 		# Enable the firewall
 		ufw enable;;
 		* ) echo "skipped";;
@@ -278,7 +278,7 @@ logtimestamps=1
 maxconnections=256
 masternode=1
 externalip=$publicip
-bind=$publicip:17652
+bind=$publicip:6250
 masternodeaddr=$publicip
 masternodeprivkey=$masternodeprivkey
 EOF
@@ -287,7 +287,7 @@ EOF
 # =======================================================================================
 print_status "Creating the Nodium Masternode configuration..."
 # =======================================================================================
-echo >> "$masternodealias $publicip:17652 $masternodeprivkey $collateral_output_txid $collateral_output_index"
+echo >> "$masternodealias $publicip:6250 $masternodeprivkey $collateral_output_txid $collateral_output_index"
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
@@ -304,8 +304,8 @@ TimeoutStartSec=10m
 Restart=always
 ExecStartPre=-/usr/bin/docker stop nodiumd
 ExecStartPre=-/usr/bin/docker rm  nodiumd
-ExecStartPre=/usr/bin/docker pull greerso/nodiumd:latest
-ExecStart=/usr/bin/docker run --rm --net=host -p 17652:17652 -v /mnt/nodium:/mnt/nodium --name nodiumd greerso/nodiumd:latest
+ExecStartPre=/usr/bin/docker pull Jordanl91/nodiumd:latest
+ExecStart=/usr/bin/docker run --rm --net=host -p 6250:6250 -v /mnt/nodium:/mnt/nodium --name nodiumd Jordanl91/nodiumd:latest
 [Install]
 WantedBy=multi-user.target
 EOF
@@ -324,7 +324,7 @@ done
 # =======================================================================================
 # "Install nodium aliases"
 # =======================================================================================
-echo 'alias nodium-cli="docker_alias greerso/nodiumd nodium /usr/local/bin/nodium-cli"' >> /etc/environment
+echo 'alias nodium-cli="docker_alias Jordanl91/nodiumd nodium /usr/local/bin/nodium-cli"' >> /etc/environment
 . /etc/environment
 # ---------------------------------------------------------------------------------------
 

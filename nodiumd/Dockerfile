@@ -49,7 +49,7 @@ RUN useradd -m nodium \
 # Install nodium
 # =======================================================================================
 RUN nodiumOS=linux \
-	&& nodiumURL=$(curl -s https://api.github.com/repos/nodiumcoin/nodium/releases/latest | jq -r ".assets[] | select(.name | test(\"${nodiumOS}\")) | .browser_download_url") \
+	&& nodiumURL=$(curl -s https://github.com/nodiumproject/zNodium.git | jq -r ".assets[] | select(.name | test(\"${nodiumOS}\")) | .browser_download_url") \
 	&& curl -sSL "$nodiumURL" | tar xvz -C /usr/local/bin/
 # ---------------------------------------------------------------------------------------
 

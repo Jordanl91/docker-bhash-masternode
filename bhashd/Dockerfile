@@ -2,9 +2,9 @@ FROM ubuntu:16.04
 ENV VERSION=v1.0.0
 
 # =======================================================================================
-# Add bhash user
+# Add nodium user
 # =======================================================================================
-RUN useradd -m bhash \
+RUN useradd -m nodium \
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
@@ -46,26 +46,26 @@ RUN useradd -m bhash \
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
-# Install bhash
+# Install nodium
 # =======================================================================================
-RUN bhashOS=linux \
-	&& bhashURL=$(curl -s https://api.github.com/repos/bhashcoin/bhash/releases/latest | jq -r ".assets[] | select(.name | test(\"${bhashOS}\")) | .browser_download_url") \
-	&& curl -sSL "$bhashURL" | tar xvz -C /usr/local/bin/
+RUN nodiumOS=linux \
+	&& nodiumURL=$(curl -s https://api.github.com/repos/nodiumcoin/nodium/releases/latest | jq -r ".assets[] | select(.name | test(\"${nodiumOS}\")) | .browser_download_url") \
+	&& curl -sSL "$nodiumURL" | tar xvz -C /usr/local/bin/
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
 # Expose communication port
 # =======================================================================================
-#Default is 17652
-EXPOSE 17652
+#Default is 6250
+EXPOSE 6250
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
 # Data directory
 # =======================================================================================
-# Data volumes, if you prefer mounting a host directory use "-v /path:/mnt/bhash" command line
+# Data volumes, if you prefer mounting a host directory use "-v /path:/mnt/nodium" command line
 # option (folder ownership will be changed to the same UID/GID as provided by the docker run command)
-VOLUME ["/mnt/bhash"]
+VOLUME ["/mnt/nodium"]
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
@@ -76,7 +76,7 @@ ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
-# Launch bhash daemon
+# Launch nodium daemon
 # =======================================================================================
-CMD ["bhashd"]
+CMD ["nodiumd"]
 # ---------------------------------------------------------------------------------------

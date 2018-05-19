@@ -7,54 +7,54 @@ set -e
 USER_ID=${LOCAL_USER_ID:-9001}
 GRP_ID=${LOCAL_GRP_ID:-9001}
 
-getent group bhash > /dev/null 2>&1 || groupadd -g $GRP_ID bhash
-id -u bhash > /dev/null 2>&1 || useradd --shell /bin/bash -u $USER_ID -g $GRP_ID -o -c "" -m bhash
+getent group nodium > /dev/null 2>&1 || groupadd -g $GRP_ID nodium
+id -u nodium > /dev/null 2>&1 || useradd --shell /bin/bash -u $USER_ID -g $GRP_ID -o -c "" -m nodium
 
-LOCAL_UID=$(id -u bhash)
-LOCAL_GID=$(getent group bhash | cut -d ":" -f 3)
+LOCAL_UID=$(id -u nodium)
+LOCAL_GID=$(getent group nodium | cut -d ":" -f 3)
 
 if [ ! "$USER_ID" == "$LOCAL_UID" ] || [ ! "$GRP_ID" == "$LOCAL_GID" ]; then
     echo "Warning: User with differing UID "$LOCAL_UID"/GID "$LOCAL_GID" already exists, most likely this container was started before with a different UID/GID. Re-create it to change UID/GID."
 fi
 
-echo "Starting with UID/GID : "$(id -u bhash)"/"$(getent group bhash | cut -d ":" -f 3)
+echo "Starting with UID/GID : "$(id -u nodium)"/"$(getent group nodium | cut -d ":" -f 3)
 
-export HOME=/home/bhash
+export HOME=/home/nodium
 
-# Must have a bhash config file
-if [ ! -f "/mnt/bhash/config/bhash.conf" ]; then
-  echo "No bhash.conf found in /mnt/bhash/config/. Exiting."
+# Must have a nodium config file
+if [ ! -f "/mnt/nodium/config/nodium.conf" ]; then
+  echo "No nodium.conf found in /mnt/nodium/config/. Exiting."
   exit 1
 else
-  if [ ! -L $HOME/.bhash/bhash.conf ]; then
-    ln -s /mnt/bhash/config/bhash.conf $HOME/.bhash/bhash.conf > /dev/null 2>&1 || true
+  if [ ! -L $HOME/.nodium/nodium.conf ]; then
+    ln -s /mnt/nodium/config/nodium.conf $HOME/.nodium/nodium.conf > /dev/null 2>&1 || true
   fi
 fi
 
-# Must have a bhash masternode config file
-if [ ! -f "/mnt/bhash/config/masternode.conf" ]; then
-  echo "No masternode.conf found in /mnt/bhash/config/. Exiting."
+# Must have a nodium masternode config file
+if [ ! -f "/mnt/nodium/config/masternode.conf" ]; then
+  echo "No masternode.conf found in /mnt/nodium/config/. Exiting."
   exit 1
 else
-  if [ ! -L $HOME/.bhash/masternode.conf ]; then
-    ln -s /mnt/bhash/config/masternode.conf $HOME/.bhash/masternode.conf > /dev/null 2>&1 || true
+  if [ ! -L $HOME/.nodium/masternode.conf ]; then
+    ln -s /mnt/nodium/config/masternode.conf $HOME/.nodium/masternode.conf > /dev/null 2>&1 || true
   fi
 fi
 
 # data folder can be an external volume or created locally
-if [ ! -d "/mnt/bhash/data" ]; then
+if [ ! -d "/mnt/nodium/data" ]; then
   echo "Using local data folder"
-  mkdir -p /mnt/bhash/data > /dev/null 2>&1 || true
+  mkdir -p /mnt/nodium/data > /dev/null 2>&1 || true
 else
   echo "Using external data volume"
 fi
 
 # Fix ownership of the created files/folders
-chown -R bhash:bhash /home/bhash /mnt/bhash
+chown -R nodium:nodium /home/nodium /mnt/nodium
 
 echo "Starting $@ .."
- if [[ "$1" == bhashd ]]; then
-     exec gosu bhash /bin/bash -c "$@ $OPTS"
+ if [[ "$1" == nodiumd ]]; then
+     exec gosu nodium /bin/bash -c "$@ $OPTS"
  fi
 
-exec gosu bhash "$@"
+exec gosu nodium "$@"

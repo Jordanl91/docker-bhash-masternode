@@ -57,9 +57,9 @@ apt-get install -y docker.io \
 # =======================================================================================
 # Installation variables
 # =======================================================================================
-rpcuser="bhashuser"
+rpcuser="nodiumhuser"
 rpcpassword="$(head -c 32 /dev/urandom | base64)"
-bhashuserpw="$(head -c 32 /dev/urandom | base64)"
+nodiumuserpw="$(head -c 32 /dev/urandom | base64)"
 publicip="$(dig +short myip.opendns.com @resolver1.opendns.com)"
 Hostname="$(cat /etc/hostname)"
 sshPort=$(cat /etc/ssh/sshd_config | grep Port | awk '{print $2}')
@@ -68,7 +68,7 @@ sshPort=$(cat /etc/ssh/sshd_config | grep Port | awk '{print $2}')
 # =======================================================================================
 # Server setup
 # =======================================================================================
-read -p "Would you like perform a base server setup (swap, hostname, bhash user, ufw, fail2ban)? " choice
+read -p "Would you like perform a base server setup (swap, hostname, nodium user, ufw, fail2ban)? " choice
 case "$choice" in 
   y|Y ) 
   	# =======================================================================================
@@ -95,8 +95,8 @@ case "$choice" in
 	# =======================================================================================
 	read -p "Would you like to change your server hostname from $Hostname to something else? " choice
 	case "$choice" in 
-	  y|Y ) echo "Please enter server name: (Default: my.bhash.node)"
-		newHostname=$(inputWithDefault my.bhash.node)
+	  y|Y ) echo "Please enter server name: (Default: my.nodium.node)"
+		newHostname=$(inputWithDefault my.nodium.node)
 		sed -i "s|$Hostname|$newHostname|1" /etc/hostname
 		if grep -q "$Hostname" /etc/hosts; then
 		    sed -i "s|$Hostname|$newHostname|1" /etc/hosts
@@ -110,15 +110,15 @@ case "$choice" in
 	
 	
 	# =======================================================================================
-	print_status "Add a bhash user..."
+	print_status "Add a nodium user..."
 	# =======================================================================================
-	read -p "Would you like to a bhash user? " choice
+	read -p "Would you like to a nodium user? " choice
 	case "$choice" in 
-	  y|Y ) echo "Please enter the new user name: (Default bhash)"
-		username=$(inputWithDefault bhash)
-		echo "Please enter the password for '${username}': (Default $bhashuserpw)"
+	  y|Y ) echo "Please enter the new user name: (Default nodium)"
+		username=$(inputWithDefault nodium)
+		echo "Please enter the password for '${username}': (Default $nodiumuserpw)"
 		echo "You will need to remember this password"
-		userPassword=$(inputWithDefault $bhashuserpw)	
+		userPassword=$(inputWithDefault $nodiumuserpw)	
 		adduser --gecos "" --disabled-password --quiet "$username"
 		echo "$username:$userPassword" | chpasswd	
 		# Add user to sudoers and docker
@@ -206,7 +206,7 @@ case "$choice" in
 		ufw default deny incoming
 		# Open ports for ssh and webapps
 		ufw allow $sshPort/tcp comment 'ssh port'
-		ufw allow 17652/tcp comment 'bhash daemon'	
+		ufw allow 17652/tcp comment 'nodium daemon'	
 		# Enable the firewall
 		ufw enable;;
 		* ) echo "skipped";;
@@ -229,7 +229,7 @@ esac
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
-print_status "Installing the BHash Masternode..."
+print_status "Installing the Nodium Masternode..."
 # =======================================================================================
 echo "Please enter the Masternode Alias that you copied from your wallet earlier"
 while read masternodealias && [ -z "$masternodealias" ]; do :; done
@@ -260,14 +260,14 @@ read -n 1 -s -r -p "You will need this RPC User and RPC Password to enter into t
 systemctl enable docker
 systemctl start docker
 print_status "Creating the docker mount directories..."
-mkdir -p /mnt/bhash/{config,data}
+mkdir -p /mnt/nodium/{config,data}
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
-# Create bhashd configuration
+# Create nodiumd configuration
 # =======================================================================================
-print_status "Creating the BHash configuration..."
-cat <<EOF > /mnt/bhash/config/bhash.conf
+print_status "Creating the Nodium configuration..."
+cat <<EOF > /mnt/nodium/config/nodium.conf
 rpcuser=$rpcuser
 rpcpassword=$rpcpassword
 rpcallowip=127.0.0.1
@@ -285,35 +285,35 @@ EOF
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
-print_status "Creating the BHash Masternode configuration..."
+print_status "Creating the Nodium Masternode configuration..."
 # =======================================================================================
 echo >> "$masternodealias $publicip:17652 $masternodeprivkey $collateral_output_txid $collateral_output_index"
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
-print_status "Installing BHash Maternode service..."
+print_status "Installing Nodium Maternode service..."
 # =======================================================================================
-cat <<EOF > /etc/systemd/system/bhashd.service
+cat <<EOF > /etc/systemd/system/nodiumd.service
 [Unit]
-Description=BHash Masternode Container
+Description=Nodium Masternode Container
 After=docker.service
 Requires=docker.service
 
 [Service]
 TimeoutStartSec=10m
 Restart=always
-ExecStartPre=-/usr/bin/docker stop bhashd
-ExecStartPre=-/usr/bin/docker rm  bhashd
-ExecStartPre=/usr/bin/docker pull greerso/bhashd:latest
-ExecStart=/usr/bin/docker run --rm --net=host -p 17652:17652 -v /mnt/bhash:/mnt/bhash --name bhashd greerso/bhashd:latest
+ExecStartPre=-/usr/bin/docker stop nodiumd
+ExecStartPre=-/usr/bin/docker rm  nodiumd
+ExecStartPre=/usr/bin/docker pull greerso/nodiumd:latest
+ExecStart=/usr/bin/docker run --rm --net=host -p 17652:17652 -v /mnt/nodium:/mnt/nodium --name nodiumd greerso/nodiumd:latest
 [Install]
 WantedBy=multi-user.target
 EOF
 
 print_status "Enabling and starting container service (please be patient...)"
 systemctl daemon-reload
-systemctl enable bhashd
-until systemctl restart bhashd
+systemctl enable nodiumd
+until systemctl restart nodiumd
 do
   echo ".."
   sleep 30
@@ -322,9 +322,9 @@ done
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
-# "Install bash aliases"
+# "Install nodium aliases"
 # =======================================================================================
-echo 'alias bhash-cli="docker_alias greerso/bhashd bhash /usr/local/bin/bhash-cli"' >> /etc/environment
+echo 'alias nodium-cli="docker_alias greerso/nodiumd nodium /usr/local/bin/nodium-cli"' >> /etc/environment
 . /etc/environment
 # ---------------------------------------------------------------------------------------
 
